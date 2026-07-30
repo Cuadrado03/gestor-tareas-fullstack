@@ -12,5 +12,15 @@
 <ul *ngIf="!isLoading && !loadError && tasks.length > 0">
   <li *ngFor="let task of tasks">
     <strong>{{ task.title }}</strong> — {{ task.status }}
+    <button (click)="openEditModal(task)">Editar</button>
   </li>
 </ul>
+
+<button (click)="openCreateModal()">+ Nueva tarea</button>
+
+<app-task-form-modal
+  [isOpen]="isModalOpen"
+  [task]="taskBeingEdited"
+  (save)="onSaveTask($event)"
+  (closed)="closeModal()"
+></app-task-form-modal>

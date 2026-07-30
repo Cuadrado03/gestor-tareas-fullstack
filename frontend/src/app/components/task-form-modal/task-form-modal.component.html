@@ -1,0 +1,33 @@
+<div class="overlay" *ngIf="isOpen" (click)="onClose()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>{{ isEditMode ? 'Editar tarea' : 'Nueva tarea' }}</h3>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label for="title">Título *</label>
+        <input id="title" type="text" formControlName="title" maxlength="100" />
+        <div class="error" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+          <span *ngIf="form.get('title')?.errors?.['required']">El título es obligatorio.</span>
+          <span *ngIf="form.get('title')?.errors?.['maxlength']">Máximo 100 caracteres.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Descripción</label>
+        <textarea id="description" formControlName="description" maxlength="500" rows="3"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="status">Estado *</label>
+        <select id="status" formControlName="status">
+          <option *ngFor="let s of statuses" [value]="s">{{ statusLabels[s] }}</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button type="button" (click)="onClose()">Cancelar</button>
+        <button type="submit">{{ isEditMode ? 'Guardar cambios' : 'Crear tarea' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
