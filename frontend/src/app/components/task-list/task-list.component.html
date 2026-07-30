@@ -13,6 +13,10 @@
   <li *ngFor="let task of tasks">
     <strong>{{ task.title }}</strong> — {{ task.status }}
     <button (click)="openEditModal(task)">Editar</button>
+    <button (click)="askDelete(task)">Eliminar</button>
+    <button *ngIf="nextStatus(task.status)" (click)="advanceStatus(task)">
+      Avanzar a {{ nextStatus(task.status) }}
+    </button>
   </li>
 </ul>
 
@@ -24,3 +28,10 @@
   (save)="onSaveTask($event)"
   (closed)="closeModal()"
 ></app-task-form-modal>
+
+<app-confirm-dialog
+  [isOpen]="isConfirmOpen"
+  [message]="'¿Eliminar la tarea &quot;' + (taskPendingDelete?.title ?? '') + '&quot;?'"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()"
+></app-confirm-dialog>

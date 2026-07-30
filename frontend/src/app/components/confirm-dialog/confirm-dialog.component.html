@@ -1,0 +1,9 @@
+<div class="overlay" *ngIf="isOpen" (click)="cancelled.emit()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <p>{{ message }}</p>
+    <div class="actions">
+      <button (click)="cancelled.emit()">Cancelar</button>
+      <button (click)="confirmed.emit()">Eliminar</button>
+    </div>
+  </div>
+</div>
