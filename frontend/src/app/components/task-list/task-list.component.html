@@ -1,0 +1,16 @@
+<div *ngIf="isLoading">Cargando tareas...</div>
+
+<div *ngIf="!isLoading && loadError">
+  {{ loadError }}
+  <button (click)="loadTasks()">Reintentar</button>
+</div>
+
+<div *ngIf="!isLoading && !loadError && tasks.length === 0">
+  No hay tareas todavía.
+</div>
+
+<ul *ngIf="!isLoading && !loadError && tasks.length > 0">
+  <li *ngFor="let task of tasks">
+    <strong>{{ task.title }}</strong> — {{ task.status }}
+  </li>
+</ul>
