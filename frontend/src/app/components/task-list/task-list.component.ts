@@ -43,7 +43,7 @@ readonly statusLabels = TASK_STATUS_LABELS;
         this.isLoading = false;
       },
       error: (err) => {
-        this.loadError = 'No se pudieron cargar las tareas.';
+        this.loadError = err.friendlyMessage || 'No se pudieron cargar las tareas.';
         this.isLoading = false;
       },
     });
@@ -77,7 +77,7 @@ onSaveTask(dto: CreateTaskDto | UpdateTaskDto): void {
       this.loadTasks();
     },
     error: (err) => {
-      this.notifications.error('No se pudo guardar la tarea.');
+      this.notifications.error(err.friendlyMessage || 'No se pudo guardar la tarea.');
     },
   });
 }
@@ -103,7 +103,7 @@ onSaveTask(dto: CreateTaskDto | UpdateTaskDto): void {
         this.loadTasks();
       },
       error: (err) => {
-        this.notifications.error('No se pudo eliminar la tarea.');
+         this.notifications.error(err.friendlyMessage || 'No se pudo eliminar la tarea.');
         this.isConfirmOpen = false;
       },
     });
@@ -125,7 +125,7 @@ advanceStatus(task: Task): void {
       this.notifications.success(`Tarea movida a "${this.statusLabels[updated.status]}".`);
     },
     error: (err) => {
-      this.notifications.error('No se pudo actualizar el estado.');
+       this.notifications.error(err.friendlyMessage || 'No se pudo actualizar el estado.');
     },
   });
 }
