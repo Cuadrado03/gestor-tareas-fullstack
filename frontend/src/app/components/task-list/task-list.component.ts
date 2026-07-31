@@ -4,6 +4,7 @@ import { CreateTaskDto, Task, TaskStatus, UpdateTaskDto } from '../../models/tas
 import { TaskService } from '../../services/task.service';
 import { TaskFormModalComponent } from '../task-form-modal/task-form-modal.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-task-list',
@@ -22,7 +23,10 @@ export class TaskListComponent implements OnInit {
   isConfirmOpen = false;
   taskPendingDelete: Task | null = null;
 
-  constructor(private taskService: TaskService) {}
+ constructor(
+  private taskService: TaskService,
+  private notifications: NotificationService
+) {}
 
   ngOnInit(): void {
     this.loadTasks();
@@ -58,21 +62,24 @@ export class TaskListComponent implements OnInit {
     this.isModalOpen = false;
   }
 
-  onSaveTask(dto: CreateTaskDto | UpdateTaskDto): void {
-    const request$ = this.taskBeingEdited
-      ? this.taskService.update(this.taskBeingEdited.id, dto)
-      : this.taskService.create(dto as CreateTaskDto);
+onSaveTask(dto: CreateTaskDto | UpdateTaskDto): void {
+  const request$ = this.taskBeingEdited
+    ? this.taskService.update(this.taskBeingEdited.id, dto)
+    : this.taskService.create(dto as CreateTaskDto);
 
-    request$.subscribe({
-      next: () => {
-        this.closeModal();
-        this.loadTasks();
-      },
-      error: (err) => {
-        alert('No se pudo guardar la tarea.');
-      },
-    });
-  }
+  request$.subscribe({
+    next: () => {
+      this.notifications.success(
+        this.taskBeingEdited ? 'Tarea actualizada correctamente.' : 'Tarea creada correctamente.'
+      );
+      this.closeModal();
+      this.loadTasks();
+    },
+    error: (err) => {
+      this.notifications.error('No se pudo guardar la tarea.');
+    },
+  });
+}
 
   askDelete(task: Task): void {
     this.taskPendingDelete = task;
@@ -89,12 +96,13 @@ export class TaskListComponent implements OnInit {
 
     this.taskService.delete(this.taskPendingDelete.id).subscribe({
       next: () => {
+        this.notifications.success('Tarea eliminada correctamente.');
         this.isConfirmOpen = false;
         this.taskPendingDelete = null;
         this.loadTasks();
       },
       error: (err) => {
-        alert('No se pudo eliminar la tarea.');
+        this.notifications.error('No se pudo eliminar la tarea.');
         this.isConfirmOpen = false;
       },
     });
@@ -106,17 +114,18 @@ export class TaskListComponent implements OnInit {
     return null;
   }
 
-  advanceStatus(task: Task): void {
-    const next = this.nextStatus(task.status);
-    if (!next) return;
+advanceStatus(task: Task): void {
+  const next = this.nextStatus(task.status);
+  if (!next) return;
 
-    this.taskService.update(task.id, { status: next }).subscribe({
-      next: (updated) => {
-        this.tasks = this.tasks.map((t) => (t.id === updated.id ? updated : t));
-      },
-      error: (err) => {
-        alert('No se pudo actualizar el estado.');
-      },
-    });
-  }
+  this.taskService.update(task.id, { status: next }).subscribe({
+    next: (updated) => {
+      this.tasks = this.tasks.map((t) => (t.id === updated.id ? updated : t));
+      this.notifications.success(`Tarea movida a "${updated.status}".`);
+    },
+    error: (err) => {
+      this.notifications.error('No se pudo actualizar el estado.');
+    },
+  });
+}
 }

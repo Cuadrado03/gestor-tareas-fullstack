@@ -1,0 +1,10 @@
+<div class="toast-container">
+  <div
+    *ngFor="let n of notificationService.notifications()"
+    class="toast"
+    [ngClass]="n.type"
+    (click)="dismiss(n.id)"
+  >
+    {{ n.message }}
+  </div>
+</div>
