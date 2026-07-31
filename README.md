@@ -91,17 +91,15 @@ El frontend sigue el patrón **smart/dumb components**:
 - **Manejo de errores con `statusCode` en el backend**: permite que el service se mantenga "puro" (sin conocer nada de Express/HTTP), delegando la traducción a código de estado HTTP al middleware central.
 
 ## Funcionalidades implementadas
-
 - CRUD completo de tareas (crear, listar, editar, eliminar)
 - Validaciones en backend (campos obligatorios, longitudes máximas, estado válido) y en frontend (formulario reactivo con validadores)
 - Códigos de estado HTTP apropiados (200, 201, 400, 404, 500)
 - Manejo de errores robusto (try/catch + middleware centralizado en backend, manejo de errores en las suscripciones HTTP en frontend)
 - Confirmación antes de eliminar una tarea
 - Cambio de estado de tarea (Pendiente → En progreso → Completada)
-
+- Interceptor HTTP que diferencia y traduce errores (400, 404, 500, sin conexión) a mensajes legibles
 
 ## Mejoras futuras
-
 - Migrar la persistencia de memoria a una base de datos real (SQLite o PostgreSQL), manteniendo la misma interfaz en la capa de services.
 - Agregar tests unitarios (Jest en backend, Angular Testing en frontend).
 - Agregar autenticación básica.
