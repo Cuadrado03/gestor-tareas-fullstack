@@ -2,8 +2,8 @@
   <div class="dialog" (click)="$event.stopPropagation()">
     <p>{{ message }}</p>
     <div class="actions">
-      <button (click)="cancelled.emit()">Cancelar</button>
-      <button (click)="confirmed.emit()">Eliminar</button>
+      <button class="btn-cancel" (click)="cancelled.emit()">Cancelar</button>
+      <button class="btn-danger" (click)="confirmed.emit()">Eliminar</button>
     </div>
   </div>
 </div>

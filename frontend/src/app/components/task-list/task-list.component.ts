@@ -5,6 +5,7 @@ import { TaskService } from '../../services/task.service';
 import { TaskFormModalComponent } from '../task-form-modal/task-form-modal.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { NotificationService } from '../../services/notification.service';
+import { TASK_STATUS_LABELS } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-list',
@@ -19,7 +20,7 @@ export class TaskListComponent implements OnInit {
   loadError: string | null = null;
   isModalOpen = false;
   taskBeingEdited: Task | null = null;
-
+readonly statusLabels = TASK_STATUS_LABELS; 
   isConfirmOpen = false;
   taskPendingDelete: Task | null = null;
 
@@ -121,7 +122,7 @@ advanceStatus(task: Task): void {
   this.taskService.update(task.id, { status: next }).subscribe({
     next: (updated) => {
       this.tasks = this.tasks.map((t) => (t.id === updated.id ? updated : t));
-      this.notifications.success(`Tarea movida a "${updated.status}".`);
+      this.notifications.success(`Tarea movida a "${this.statusLabels[updated.status]}".`);
     },
     error: (err) => {
       this.notifications.error('No se pudo actualizar el estado.');
